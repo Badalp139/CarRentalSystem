@@ -1,0 +1,101 @@
+﻿<div class="row">
+    <div class="col-sm-4">
+
+        @using (Html.BeginForm("Save", "ReturnCar", FormMethod.Post, new { id = "popupForm" }))
+        {
+            <div>
+                <h1>Car Rentail</h1>
+            </div>
+
+
+            <div class="form-group">
+                <label class="form-label">Car no</label>
+                <input type="text" id="Carno" name="Carno" class="form-control" placeholder="Car" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Customer ID</label>
+                <input type="text" id="Custid" name="Custid" class="form-control" placeholder="CustID" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="text" id="date" name="date" class="form-control" placeholder="Date" required />
+            </div>
+
+
+            <div class="form-group">
+                <label class="form-label">Days Elapse</label>
+                <input type="text" id="elsp" name="elsp" class="form-control" placeholder="Days Elapse" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Fine</label>
+                <input type="text" id="fine" name="fine" class="form-control" placeholder="Fine" required />
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        }
+
+
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-3.7.0.js"></script>
+    <script src="~/Scripts/jquery-3.7.0.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    
+    <script>
+
+        getCarid();
+        function getCarid() {
+
+
+            $("#Carno").keyup(function (e) {
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: '/ReturnCar/Getid?Carno=' + $("#Carno").val(),
+                    datatype: 'JSON',
+                    success: function (data) {
+                        console.log(data)
+
+                        $('#Custid').val(data[0].Custid);
+                        $('#date').val(new Date(parseInt(data[0].EndDate.substr(6))).toLocaleDateString());
+                        $('#elsp').val(data[0].ElapseDays);
+
+
+                        var elap = data[0].ElapseDays;
+
+                        if (elap > 0) {
+                            var fine = elap * 100;
+                            $('#fine').val(fine.toString());
+                        }
+                        else
+                        {
+                            $('#fine').val("0");
+                        }
+
+                    }
+                });
+
+
+            });
+        }
+
+
+
+    </script>
+
+
+
+ }
+
